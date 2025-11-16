@@ -136,6 +136,110 @@ def validation_error(error):
         "timestamp": datetime.utcnow().isoformat() + "Z"
     }), 400
 
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint with simple API documentation"""
+    return '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>User Profile REST API</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+            .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            h1 { color: #2c3e50; }
+            .endpoint { background: #ecf0f1; padding: 15px; margin: 10px 0; border-radius: 5px; }
+            .method { color: #27ae60; font-weight: bold; }
+            .url { color: #3498db; font-family: monospace; }
+            .status { color: #e74c3c; font-weight: bold; }
+            .test-btn { background: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+            .test-btn:hover { background: #2980b9; }
+            .result { background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-family: monospace; white-space: pre-wrap; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🚀 User Profile REST API</h1>
+            <p><strong>Status:</strong> <span style="color: #27ae60;">✅ Running & Healthy</span></p>
+            <p><strong>Server Time:</strong> ''' + datetime.utcnow().isoformat() + '''Z</p>
+            
+            <h2>📡 Available Endpoints</h2>
+            
+            <div class="endpoint">
+                <strong class="method">GET</strong> <span class="url">/api/health</span> - Health Check
+                <button class="test-btn" onclick="testHealth()">Test</button>
+                <div id="health-result" class="result" style="display:none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <strong class="method">GET</strong> <span class="url">/api/users</span> - Get All Users
+                <button class="test-btn" onclick="testUsers()">Test</button>
+                <div id="users-result" class="result" style="display:none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <strong class="method">GET</strong> <span class="url">/api/users/{id}</span> - Get User by ID
+                <button class="test-btn" onclick="testUser()">Test (User 1)</button>
+                <div id="user-result" class="result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <script>
+            function testHealth() {
+                const resultDiv = document.getElementById('health-result');
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '🔄 Loading...';
+                
+                fetch('/api/health')
+                    .then(response => response.json())
+                    .then(data => {
+                        resultDiv.innerHTML = '✅ Success:\n' + JSON.stringify(data, null, 2);
+                        resultDiv.style.background = '#d4edda';
+                    })
+                    .catch(error => {
+                        resultDiv.innerHTML = '❌ Error:\n' + error.message;
+                        resultDiv.style.background = '#f8d7da';
+                    });
+            }
+            
+            function testUsers() {
+                const resultDiv = document.getElementById('users-result');
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '🔄 Loading...';
+                
+                fetch('/api/users')
+                    .then(response => response.json())
+                    .then(data => {
+                        resultDiv.innerHTML = '✅ Success:\n' + JSON.stringify(data, null, 2);
+                        resultDiv.style.background = '#d4edda';
+                    })
+                    .catch(error => {
+                        resultDiv.innerHTML = '❌ Error:\n' + error.message;
+                        resultDiv.style.background = '#f8d7da';
+                    });
+            }
+            
+            function testUser() {
+                const resultDiv = document.getElementById('user-result');
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '🔄 Loading...';
+                
+                fetch('/api/users/1')
+                    .then(response => response.json())
+                    .then(data => {
+                        resultDiv.innerHTML = '✅ Success:\n' + JSON.stringify(data, null, 2);
+                        resultDiv.style.background = '#d4edda';
+                    })
+                    .catch(error => {
+                        resultDiv.innerHTML = '❌ Error:\n' + error.message;
+                        resultDiv.style.background = '#f8d7da';
+                    });
+            }
+        </script>
+    </body>
+    </html>
+    '''
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
