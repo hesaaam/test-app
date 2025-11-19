@@ -564,4 +564,4 @@ def delete_user(user_id):
 
 if __name__ == '__main__':
     # Run in debug mode for development
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
